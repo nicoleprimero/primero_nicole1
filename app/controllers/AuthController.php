@@ -49,7 +49,7 @@ public function login()
             redirect('auth/login');
         } else {
             // ✅ Login successful → set session
-            $this->auth->set_logged_in($data);
+            $this->auth->is_logged_in($data);
 
             // Get the user's role after successful login
             $role = $this->session->userdata('role');
