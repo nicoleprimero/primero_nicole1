@@ -30,51 +30,49 @@ public function register()
 
 public function login()
 {
-    // Load required libraries
     $this->call->library('session');
     $this->call->library('auth');
 
-    // Check if form was submitted
     if ($this->io->method() === 'post') {
         $username = $this->io->post('username');
         $password = $this->io->post('password');
 
-        // Attempt login and get user data as an array
+        // Attempt login
         $user = $this->auth->login($username, $password);
 
-        if (empty($user)) {
-            // ❌ Login failed → set flash messages
+        // ✅ Ensure $user is an array before accessing keys
+        if (!is_array($user) || empty($user)) {
+            // ❌ Login failed
             $this->session->set_flashdata([
                 'is_invalid' => 'is-invalid',
                 'err_message' => 'These credentials do not match our records.'
             ]);
+            redirect('auth/login');
+            exit;
+        }
 
-            redirect('auth/login'); // redirect back to login
+        // ✅ Login successful → set session
+        $this->auth->set_logged_in($user['id']); // pass user ID
+
+        // Save extra session data
+        $this->session->set_userdata([
+            'username' => $user['username'],
+            'role' => $user['role']
+        ]);
+
+        // Redirect based on role
+        $role = $user['role'];
+        if ($role === 'admin') {
+            redirect('users/view'); // admin → table page
         } else {
-            // ✅ Login successful → set session
-            $this->auth->set_logged_in($user['id']); // pass user ID
-
-            // Save extra session data if needed
-            $this->session->set_userdata([
-                'username' => $user['username'],
-                'role' => $user['role']
-            ]);
-
-            // Get the user's role after login
-            $role = $user['role'];
-
-            // Redirect based on role
-            if ($role === 'admin') {
-                redirect('users/view'); // admin → table page
-            } else {
-                redirect('user/dashboard'); // user → dashboard
-            }
+            redirect('user/dashboard'); // user → dashboard
         }
     }
 
     // Show login view if GET request
     $this->call->view('auth/login');
 }
+
 
 
     
