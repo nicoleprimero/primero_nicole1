@@ -29,6 +29,9 @@
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input id="password" type="password" name="password" placeholder="Enter password" required>
+
+                    
+                    <input type="password" name="password_confirmation" placeholder="Confirm Password" required>
                 </div>
 
                 <!-- Role -->
