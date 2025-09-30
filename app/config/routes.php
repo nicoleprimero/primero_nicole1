@@ -64,4 +64,4 @@ $router->get('/auth/logout', 'AuthController::logout');
 $router->match('/auth/register', 'AuthController::register', array('GET', 'POST'));
 
 $router->match('auth/password-reset', 'AuthController::password_reset', ['POST', 'GET']);
-$router->match('auth/set-new-password', 'Auth::set_new_password', ['POST', 'GET']);
+$router->match('auth/set-new-password', 'AuthController::set_new_password', ['POST', 'GET']);
