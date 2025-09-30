@@ -10,7 +10,7 @@ class AuthController extends Controller
     }
 
 
-/*public function register()
+public function register()
 {
     if ($this->io->method() === 'post') {
         $username = $this->io->post('username');
@@ -26,48 +26,48 @@ class AuthController extends Controller
     } else {
         $this->call->view('auth/register');
     }
-}*/
-    public function register() {
+}
 
-        if($this->form_validation->submitted()) {
-            $username = $this->io->post('username');
-            $email = $this->io->post('email');
-			$email_token = bin2hex(random_bytes(50));
-            $this->form_validation
-                ->name('username')
-                    ->required()
-                    ->is_unique('magicusers', 'username', $username, 'Username was already taken.')
-                    ->min_length(5, 'Username name must not be less than 5 characters.')
-                    ->max_length(20, 'Username name must not be more than 20 characters.')
-                    ->alpha_numeric_dash('Special characters are not allowed in username.')
-                ->name('password')
-                    ->required()
-                    //->min_length(8, 'Password must not be less than 8 characters.')
-                ->name('password_confirmation')
-                    ->required()
-                    //->min_length(8, 'Password confirmation name must not be less than 8 characters.')
-                    ->matches('password', 'Passwords did not match.')
-                ->name('email')
-                    ->required()
-                    ->is_unique('magicusers', 'email', $email, 'Email was already taken.');
-                if($this->form_validation->run()) {
-                    if($this->lauth->register($username, $email, $this->io->post('password'), $email_token)) {
-                        $data = $this->lauth->login($email, $this->io->post('password'));
-                        $this->lauth->set_logged_in($data);
-                        redirect('auth/login');
-                    } else {
-                        set_flash_alert('danger', config_item('SQLError'));
-                    }
-                }  else {
-                    set_flash_alert('danger', $this->form_validation->errors()); 
-                    redirect('auth/register');
-                }
+public function login()
+{
+    $this->call->library('session');
+    $this->call->library('auth');
+
+    if ($this->io->method() === 'post') {
+        $username = $this->io->post('username');
+        $password = $this->io->post('password');
+
+        // Attempt login and get user data
+        $data = $this->auth->login($username, $password);
+
+        if (empty($data)) {
+            // ❌ Login failed → set flash messages
+            $this->session->set_flashdata([
+                'is_invalid' => 'is-invalid',
+                'err_message' => 'These credentials do not match our records.'
+            ]);
+            redirect('auth/login');
         } else {
-            $this->call->view('auth/register');
+            // ✅ Login successful → set session
+            $this->auth->set_logged_in($data);
+
+            // Get the user's role after successful login
+            $role = $this->session->userdata('role');
+
+            // Redirect based on role
+            if ($role === 'admin') {
+                redirect('users/view'); // admin → table page
+            } else {
+                redirect('user/dashboard'); // user → dashboard
+            }
         }
-        
     }
 
+    // Show login view if GET request
+    $this->call->view('auth/login');
+}
+
+    
 
     /*public function login()
     {
@@ -98,7 +98,7 @@ class AuthController extends Controller
     $this->call->view('auth/login');
     }*/
 
-    public function login() {
+ /*   public function login() {
         if($this->form_validation->submitted()) {
             $email = $this->io->post('email');
 			$password = $this->io->post('password');
@@ -114,7 +114,7 @@ class AuthController extends Controller
             $this->call->view('auth/login');
         }
         
-    }
+    }*/
 
     public function dashboard()
     {
@@ -136,19 +136,14 @@ class AuthController extends Controller
 
 
 
-   /* public function logout()
+    public function logout()
     {
         $this->call->library('auth');
         $this->auth->logout();
         redirect('auth/login');
-    }*/
-
-    public function logout() {
-        if($this->auth->set_logged_out()) {
-            redirect('auth/login');
-        }
     }
 
+   
 
     private function send_password_token_to_email($email, $token) {
 		$template = file_get_contents(ROOT_DIR.PUBLIC_DIR.'/templates/reset_password_email.html');
