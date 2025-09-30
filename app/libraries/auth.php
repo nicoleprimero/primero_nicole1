@@ -62,30 +62,12 @@ class Auth
     /**
      * Check if user is logged in
      */
-   /* public function is_logged_in()
+    public function is_logged_in()
     {
         return (bool) $this->session->userdata('logged_in');
-    }*/
+    }
 
-    public function is_logged_in()
-	{
-		$data = array(
-			'user_id' => $this->_lava->session->userdata('user_id'),
-			'browser' => $_SERVER['HTTP_USER_AGENT'],
-			'session_data' => $this->_lava->session->userdata('session_data')
-		);
-		$count = $this->_lava->db->table('sessions')
-						->select_count('session_id', 'count')
-						->where($data)
-						->get()['count'];
-		if($this->_lava->session->userdata('logged_in') == 1 && $count > 0) {
-			return true;
-		} else {
-			if($this->_lava->session->has_userdata('user_id')) {
-				$this->set_logged_out();
-			}
-		}
-	}
+ 
 
     /**
      * Check user role
