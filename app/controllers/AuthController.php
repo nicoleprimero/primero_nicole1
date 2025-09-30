@@ -100,7 +100,7 @@ class AuthController extends Controller
 
     public function login() {
         if($this->form_validation->submitted()) {
-            $username = $this->io->post('username');
+            $email = $this->io->post('email');
 			$password = $this->io->post('password');
             $data = $this->auth->login($email, $password);
             if(empty($data)) {

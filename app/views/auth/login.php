@@ -15,8 +15,8 @@
             <form method="post" action="<?=site_url('auth/login');?>">
                 <!-- Username -->
                 <div class="form-group">
-                    <label for="username">Username</label>
-                    <input id="username" type="text" name="username" placeholder="Enter username" required>
+                    <label for="email">Email</label>
+                    <input id="email" type="text" name="email" placeholder="Enter email" required>
                 </div>
 
                 <!-- Password -->

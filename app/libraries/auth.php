@@ -136,7 +136,9 @@ class Auth
 			'password' => $this->passwordhash($password),
 			'email' => $email,
 			'role'=> $role,
-			'email_token' => $email_token
+			'email_token' => $email_token,
+            'created_at' => date("Y-m-d h:i:s", time()),
+            'updated_at' => date("Y-m-d h:i:s", time())
 		);
 
 		$res = $this->_lava->db->table('magicusers')->insert($data);
@@ -156,13 +158,13 @@ class Auth
 
     // Allow login via username
     $user = $this->db->table('magicusers')
-                       ->where('username', $username)
+                       ->where('email', $email)
                        ->get();
 
     if ($user && isset($user['password']) && password_verify($password, $user['password'])) {
         $this->session->set_userdata([
             'user_id'   => $user['id'],
-            'username'  => $user['username'],
+            'email'  => $user['email'],
             'role'      => ($user['role'] ?? 'fairy'),
             'logged_in' => true
         ]);
