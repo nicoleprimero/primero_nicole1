@@ -210,7 +210,8 @@ private function send_password_token_to_email($email, $token)
 
     // Send email and log errors if failed
     if (!$this->email->send()) {
-        log_message('error', "Password reset email failed to send to {$email}");
+        error_log("Password reset email failed to send to {$email}");
+
         return false;
     }
 
