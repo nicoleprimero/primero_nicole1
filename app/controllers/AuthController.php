@@ -10,7 +10,7 @@ class AuthController extends Controller
     }
 
 
-public function register()
+/*public function register()
 {
     if ($this->io->method() === 'post') {
         $username = $this->io->post('username');
@@ -26,10 +26,50 @@ public function register()
     } else {
         $this->call->view('auth/register');
     }
-}
+}*/
+    public function register() {
+
+        if($this->form_validation->submitted()) {
+            $username = $this->io->post('username');
+            $email = $this->io->post('email');
+			$email_token = bin2hex(random_bytes(50));
+            $this->form_validation
+                ->name('username')
+                    ->required()
+                    ->is_unique('users', 'username', $username, 'Username was already taken.')
+                    ->min_length(5, 'Username name must not be less than 5 characters.')
+                    ->max_length(20, 'Username name must not be more than 20 characters.')
+                    ->alpha_numeric_dash('Special characters are not allowed in username.')
+                ->name('password')
+                    ->required()
+                    //->min_length(8, 'Password must not be less than 8 characters.')
+                ->name('password_confirmation')
+                    ->required()
+                    //->min_length(8, 'Password confirmation name must not be less than 8 characters.')
+                    ->matches('password', 'Passwords did not match.')
+                ->name('email')
+                    ->required()
+                    ->is_unique('users', 'email', $email, 'Email was already taken.');
+                if($this->form_validation->run()) {
+                    if($this->lauth->register($username, $email, $this->io->post('password'), $email_token)) {
+                        $data = $this->lauth->login($email, $this->io->post('password'));
+                        $this->lauth->set_logged_in($data);
+                        redirect('home');
+                    } else {
+                        set_flash_alert('danger', config_item('SQLError'));
+                    }
+                }  else {
+                    set_flash_alert('danger', $this->form_validation->errors()); 
+                    redirect('auth/register');
+                }
+        } else {
+            $this->call->view('auth/register');
+        }
+        
+    }
 
 
-    public function login()
+    /*public function login()
     {
     $this->call->library('session');
     $this->call->library('auth');
@@ -56,6 +96,24 @@ public function register()
     }
 
     $this->call->view('auth/login');
+    }*/
+
+    public function login() {
+        if($this->form_validation->submitted()) {
+            $username = $this->io->post('username');
+			$password = $this->io->post('password');
+            $data = $this->auth->login($email, $password);
+            if(empty($data)) {
+				$this->session->set_flashdata(['is_invalid' => 'is-invalid']);
+                $this->session->set_flashdata(['err_message' => 'These credentials do not match our records.']);
+			} else {
+				$this->auth->set_logged_in($data);
+			}
+            redirect('auth/login');
+        } else {
+            $this->call->view('auth/login');
+        }
+        
     }
 
     public function dashboard()
@@ -78,11 +136,17 @@ public function register()
 
 
 
-    public function logout()
+   /* public function logout()
     {
         $this->call->library('auth');
         $this->auth->logout();
         redirect('auth/login');
+    }*/
+
+    public function logout() {
+        if($this->auth->set_logged_out()) {
+            redirect('auth/login');
+        }
     }
 
 
