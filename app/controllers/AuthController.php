@@ -36,7 +36,7 @@ class AuthController extends Controller
             $this->form_validation
                 ->name('username')
                     ->required()
-                    ->is_unique('users', 'username', $username, 'Username was already taken.')
+                    ->is_unique('magicusers', 'username', $username, 'Username was already taken.')
                     ->min_length(5, 'Username name must not be less than 5 characters.')
                     ->max_length(20, 'Username name must not be more than 20 characters.')
                     ->alpha_numeric_dash('Special characters are not allowed in username.')
@@ -49,12 +49,12 @@ class AuthController extends Controller
                     ->matches('password', 'Passwords did not match.')
                 ->name('email')
                     ->required()
-                    ->is_unique('users', 'email', $email, 'Email was already taken.');
+                    ->is_unique('magicusers', 'email', $email, 'Email was already taken.');
                 if($this->form_validation->run()) {
                     if($this->lauth->register($username, $email, $this->io->post('password'), $email_token)) {
                         $data = $this->lauth->login($email, $this->io->post('password'));
                         $this->lauth->set_logged_in($data);
-                        redirect('home');
+                        redirect('auth/login');
                     } else {
                         set_flash_alert('danger', config_item('SQLError'));
                     }
