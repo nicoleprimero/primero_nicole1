@@ -30,29 +30,38 @@ public function register()
 
 public function login()
 {
+    // Load required libraries
     $this->call->library('session');
     $this->call->library('auth');
 
+    // Check if form was submitted
     if ($this->io->method() === 'post') {
         $username = $this->io->post('username');
         $password = $this->io->post('password');
 
-        // Attempt login and get user data
-        $data = $this->auth->login($username, $password);
+        // Attempt login and get user data as an array
+        $user = $this->auth->login($username, $password);
 
-        if (empty($data)) {
+        if (empty($user)) {
             // ❌ Login failed → set flash messages
             $this->session->set_flashdata([
                 'is_invalid' => 'is-invalid',
                 'err_message' => 'These credentials do not match our records.'
             ]);
-            redirect('auth/login');
+
+            redirect('auth/login'); // redirect back to login
         } else {
             // ✅ Login successful → set session
-            $this->auth->set_logged_in($data);
+            $this->auth->set_logged_in($user['id']); // pass user ID
 
-            // Get the user's role after successful login
-            $role = $this->session->userdata('role');
+            // Save extra session data if needed
+            $this->session->set_userdata([
+                'username' => $user['username'],
+                'role' => $user['role']
+            ]);
+
+            // Get the user's role after login
+            $role = $user['role'];
 
             // Redirect based on role
             if ($role === 'admin') {
@@ -66,6 +75,7 @@ public function login()
     // Show login view if GET request
     $this->call->view('auth/login');
 }
+
 
     
 
