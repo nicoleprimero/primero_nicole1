@@ -153,7 +153,7 @@ public function register()
 
    
 
-    private function send_password_token_to_email($email, $token) {
+   /* private function send_password_token_to_email($email, $token) {
         $template_path = ROOT_DIR.PUBLIC_DIR.'/templates/reset_password_email.html';
         $template = file_exists($template_path) ? file_get_contents($template_path) : '';
 
@@ -176,6 +176,46 @@ public function register()
             log_message('error', 'Password reset email failed to send to '.$email);
         }
     }
+*/
+
+private function send_password_token_to_email($email, $token) 
+{
+    // Path to the email template
+    $template_path = ROOT_DIR . PUBLIC_DIR . '/templates/reset_password_email.html';
+    
+    // Load template content
+    if (file_exists($template_path)) {
+        $template = file_get_contents($template_path);
+    } else {
+        // Fallback template if file missing
+        $template = "<p>Hello,</p><p>Click the link to reset your password:</p><a href='{base_url}/auth/reset-password?token={token}'>Reset Password</a>";
+    }
+
+    // Replace placeholders
+    $search  = ['{token}', '{base_url}'];
+    $replace = [$token, base_url()];
+    $template = str_replace($search, $replace, $template);
+
+    // Email sender settings
+    $sender_email = config_item('email_sender_email') ?: 'Zhyke2025@gmail.com';
+    $sender_name  = config_item('email_sender_name') ?: 'LavaLust App';
+    $reply_to     = config_item('email_reply_to') ?: $sender_email;
+
+    // Configure email
+    $this->email->sender($sender_email, $sender_name);
+    $this->email->recipient($email);
+    $this->email->reply_to($reply_to);
+    $this->email->subject('LavaLust Reset Password');
+    $this->email->email_content($template, 'html');
+
+    // Send email and log errors if failed
+    if (!$this->email->send()) {
+        log_message('error', "Password reset email failed to send to {$email}");
+        return false;
+    }
+
+    return true;
+}
 
 
     public function password_reset() {
