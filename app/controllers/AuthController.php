@@ -28,7 +28,7 @@ public function register()
     }
 }
 
-public function login()
+/*public function login()
 {
     $this->call->library('session');
     $this->call->library('auth');
@@ -71,13 +71,13 @@ public function login()
 
     // Show login view if GET request
     $this->call->view('auth/login');
-}
+}*/
 
 
 
     
 
-    /*public function login()
+    public function login()
     {
     $this->call->library('session');
     $this->call->library('auth');
@@ -104,7 +104,7 @@ public function login()
     }
 
     $this->call->view('auth/login');
-    }*/
+    }
 
  /*   public function login() {
         if($this->form_validation->submitted()) {
