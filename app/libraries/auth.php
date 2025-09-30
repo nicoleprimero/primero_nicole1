@@ -62,7 +62,7 @@ class Auth
     /**
      * Check if user is logged in
      */
-  /*  public function is_logged_in()
+    public function is_logged_in()
     {
         return (bool) $this->session->userdata('logged_in');
     }
