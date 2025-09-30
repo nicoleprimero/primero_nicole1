@@ -62,10 +62,30 @@ class Auth
     /**
      * Check if user is logged in
      */
-    public function is_logged_in()
+   /* public function is_logged_in()
     {
         return (bool) $this->session->userdata('logged_in');
-    }
+    }*/
+
+    public function is_logged_in()
+	{
+		$data = array(
+			'user_id' => $this->_lava->session->userdata('user_id'),
+			'browser' => $_SERVER['HTTP_USER_AGENT'],
+			'session_data' => $this->_lava->session->userdata('session_data')
+		);
+		$count = $this->_lava->db->table('sessions')
+						->select_count('session_id', 'count')
+						->where($data)
+						->get()['count'];
+		if($this->_lava->session->userdata('logged_in') == 1 && $count > 0) {
+			return true;
+		} else {
+			if($this->_lava->session->has_userdata('user_id')) {
+				$this->set_logged_out();
+			}
+		}
+	}
 
     /**
      * Check user role
@@ -105,6 +125,18 @@ class Auth
 		}
 	}
     
+    public function set_logged_in($user_id) {
+		$session_data = hash('sha256', md5(time().$this->get_user_id()));
+		$data = array(
+			'user_id' => $user_id,
+			'browser' => $_SERVER['HTTP_USER_AGENT'],
+			'ip' => $_SERVER['REMOTE_ADDR'],
+			'session_data' => $session_data
+		);
+		$res = $this->_lava->db->table('sessions')
+				->insert($data);
+		if($res) $this->_lava->session->set_userdata(array('session_data' => $session_data, 'user_id' => $user_id, 'logged_in' => 1));
+	}
 
 
 }
