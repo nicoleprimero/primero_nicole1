@@ -69,6 +69,7 @@ class Auth extends Controller {
                 if($this->form_validation->run()) { 
                     $created_at = date('Y-m-d H:i:s');
                     $role = isset($_POST['role']) ? $_POST['role'] : 'fairy';
+                    $role = isset($_POST['role']) ? $_POST['role'] : 'admin';
                     if($this->lauth->register($username, $email, $this->io->post('password'), $email_token, $role, $created_at)) {
                         $data = $this->lauth->login($email, $this->io->post('password'));
                         $this->lauth->set_logged_in($data);

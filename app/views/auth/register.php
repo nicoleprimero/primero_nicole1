@@ -74,13 +74,15 @@
                     username: { required: true, minlength: 5, maxlength: 20 },
                     email: { required: true, email: true },
                     password: { required: true, minlength: 8 },
-                    password_confirmation: { required: true, minlength: 8, equalTo: "#password" }
+                    password_confirmation: { required: true, minlength: 8, equalTo: "#password" },
+                    role: { required: true}
                 },
                 messages: {
                     username: { required: "Please input your username." },
                     email: { required: "Please input your email address." },
                     password: { required: "Please input your password", minlength: "Password must be at least 8 characters." },
-                    password_confirmation: { required: "Please confirm your password", minlength: "Password must be at least 8 characters.", equalTo: "Passwords do not match." }
+                    password_confirmation: { required: "Please confirm your password", minlength: "Password must be at least 8 characters.", equalTo: "Passwords do not match." },
+                    role: { required: "Please select your role."}
                 }
             });
         });
