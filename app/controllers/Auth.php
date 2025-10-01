@@ -161,7 +161,7 @@ class Auth extends Controller {
             redirect('auth/password-reset'); // <- always redirect to avoid resubmission
         }
     
-        $this->call->view('auth/password_reset');
+        $this->call->view('auth/password-reset');
     }
     
     public function set_new_password() {
