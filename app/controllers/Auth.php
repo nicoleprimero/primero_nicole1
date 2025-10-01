@@ -63,7 +63,7 @@ class Auth extends Controller {
                     if($this->lauth->register($username, $email, $this->io->post('password'), $email_token)) {
                         $data = $this->lauth->login($email, $this->io->post('password'));
                         $this->lauth->set_logged_in($data);
-                        redirect('home');
+                        redirect('auth/login');
                     } else {
                         set_flash_alert('danger', config_item('SQLError'));
                     }
@@ -87,7 +87,7 @@ class Auth extends Controller {
 		$this->email->sender('nj.prime@gmail.com'); //change based on sender email
 		$this->email->reply_to('nj.prime04@gmail.com'); // change based on sender email
 		$this->email->email_content($template, 'html');
-        $this->email->recipient($email); 
+        
 		$this->email->send();
 	}
 
