@@ -15,7 +15,7 @@ class UserModel extends Model {
         parent::__construct();
     }
 
-    public function create($username, $email, $password, $role, $created_at) {
+   /* public function create($username, $email, $password, $role, $created_at) {
         $data = array(
             'username' => $username,
             'email' => $email,
@@ -24,7 +24,64 @@ class UserModel extends Model {
             'created_at' => date('Y-m-d H:i:s', time() + 8*3600)
         );
         return $this->db->table('users')->insert($data);
-    }   
+    }   */
+
+
+        public function create() {
+    // Load form validation library
+    $this->call->library('form_validation');
+
+    // Check if form was submitted
+    if ($this->form_validation->submitted()) {
+
+        // ✅ Safely get POST data
+        $username  = trim($this->io->post('username') ?? '');
+        $email     = trim($this->io->post('email') ?? '');
+        $password  = $this->io->post('password') ?? '';
+        $password_confirmation = $this->io->post('password_confirmation') ?? '';
+        $role      = $this->io->post('role') ?? '';
+        $created_at = date('Y-m-d H:i:s', time() + 8*3600);
+
+        // ✅ Basic server-side validation
+        if (empty($username) || empty($email) || empty($password) || empty($password_confirmation) || empty($role)) {
+            $this->session->set_flashdata('error', 'All fields are required!');
+            redirect('users/add_User');
+            return;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->session->set_flashdata('error', 'Invalid email address!');
+            redirect('users/add_User');
+            return;
+        }
+
+        if ($password !== $password_confirmation) {
+            $this->session->set_flashdata('error', 'Passwords do not match!');
+            redirect('users/add_User');
+            return;
+        }
+
+        if (strlen($password) < 8) {
+            $this->session->set_flashdata('error', 'Password must be at least 8 characters!');
+            redirect('users/add_User');
+            return;
+        }
+
+        // ✅ Hash password before storing
+        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+        // ✅ Insert user
+        $this->UserModel->create($username, $email, $hashed_password, $role, $created_at);
+
+        $this->session->set_flashdata('success', 'User added successfully!');
+        redirect('users/view');
+
+    } else {
+        // Show form if not submitted
+        $this->call->view('add_User');
+    }
+}
+
 
     public function get_one($id){
        return $this->db->table('users')->where('id', $id)->get();
