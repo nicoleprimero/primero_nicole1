@@ -29,8 +29,36 @@ class UserController extends Controller {
     }
 
    
-
     public function create() {
+    $this->call->library('form_validation');
+
+    if ($this->form_validation->submitted()) {
+        $username             = $this->io->post('username');
+        $email                = $this->io->post('email');
+        $password             = $this->io->post('password');
+        $password_confirmation = $this->io->post('password_confirmation');
+        $role                 = $this->io->post('role');
+        $created_at           = date('Y-m-d H:i:s', time() + 8*3600);
+
+        // ✅ Check password confirmation
+        if ($password !== $password_confirmation) {
+            $this->session->set_flashdata('error', 'Passwords do not match!');
+            redirect('users/add_User');
+            return;
+        }
+
+        // ✅ Insert user
+        $this->UserModel->create($username, $email, $password, $role, $created_at);
+
+        $this->session->set_flashdata('success', 'User added successfully!');
+        redirect('users/view');
+    } else {
+        $this->call->view('add_User');
+    }
+}
+
+
+ /*   public function create() {
         
         $this->call->library('form_validation');
         if($this->form_validation->submitted()){
@@ -56,7 +84,7 @@ class UserController extends Controller {
 
            
     }
-
+*/
     public function update($id) {
          
         $data['user'] = $this->UserModel->find($id);
