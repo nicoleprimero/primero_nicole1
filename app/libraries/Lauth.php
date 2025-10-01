@@ -70,7 +70,7 @@ class Lauth {
 	 * @param  string $usertype   Usertype
 	 * @return $this
 	 */
-	public function register($username, $email, $password, $email_token, $role = 'fairy', $created_at)
+	public function register($username, $password, $email, $email_token, $role = 'fairy', $created_at)
 	{
 		$this->LAVA->db->transaction();
 		$data = array(
