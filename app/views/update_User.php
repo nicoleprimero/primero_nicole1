@@ -29,11 +29,8 @@
                     <input id="password" type="password" name="password" placeholder="Enter password" required>
                 </div>
 
-                 <div class="form-group">
-                    <label for="password_confirmation">Confirm Password</label>
-                    <input id="password_confirmation" type="password" class="form-control" name="password_confirmation" required minlength="8">
-                </div>
                 
+
                 <div class="form-group">
                     <label for="role">Role:</label>
                     <select id="role" name="role"  required>
