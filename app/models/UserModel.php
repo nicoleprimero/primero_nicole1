@@ -15,7 +15,7 @@ class UserModel extends Model {
         parent::__construct();
     }
 
-   /* public function create($username, $email, $password, $role, $created_at) {
+   public function create($username, $email, $password, $role, $created_at) {
         $data = array(
             'username' => $username,
             'email' => $email,
@@ -24,31 +24,10 @@ class UserModel extends Model {
             'created_at' => date('Y-m-d H:i:s', time() + 8*3600)
         );
         return $this->db->table('users')->insert($data);
-    }   */
+    }   
 
 
-     public function create($username, $email, $email_token, $password, $role, $created_at)
-	{
-		$this->LAVA->db->transaction();
-		$data = array(
-			'username' => $username,
-			'email' => $email,
-			'email_token' => $email_token,
-			'password' => $this->passwordhash($password),
-			'role' => $role,
-			'created_at' => date("Y-m-d h:i:s", time() + 8*3600)
-		);
-
-		$res = $this->LAVA->db->table('users')->insert($data);
-		if($res) {
-			$this->LAVA->db->commit();
-			return $this->LAVA->db->last_id();
-		} else {
-			$this->LAVA->db->roll_back();
-			return false;
-		}
-	}
-
+   
     public function get_one($id){
        return $this->db->table('users')->where('id', $id)->get();
     }

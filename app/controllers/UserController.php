@@ -29,52 +29,10 @@ class UserController extends Controller {
     }
 
    
-     public function create() {
-
-        if($this->form_validation->submitted()) {
-            $username = $this->io->post('username');
-            $email = $this->io->post('email');
-			$email_token = bin2hex(random_bytes(50));
-            $this->form_validation
-                ->name('username')
-                    ->required()
-                    ->is_unique('users', 'username', $username, 'Username was already taken.')
-                    ->min_length(5, 'Username name must not be less than 5 characters.')
-                    ->max_length(20, 'Username name must not be more than 20 characters.')
-                    ->alpha_numeric_dash('Special characters are not allowed in username.')
-                ->name('password')
-                    ->required()
-                    //->min_length(8, 'Password must not be less than 8 characters.')
-                ->name('password_confirmation')
-                    ->required()
-                    //->min_length(8, 'Password confirmation name must not be less than 8 characters.')
-                    ->matches('password', 'Passwords did not match.')
-                ->name('email')
-                    ->required()
-                    ->is_unique('users', 'email', $email, 'Email was already taken.');
-                if($this->form_validation->run()) { 
-                    $created_at = date('Y-m-d H:i:s');
-                    $role = isset($_POST['role']) ? $_POST['role'] : 'fairy';
-                    
-                    if($this->lauth->register($username, $email, $email_token, $this->io->post('password'), $role, $created_at)) {
-                        $data = $this->lauth->login($email, $this->io->post('password'));
-                        $this->lauth->set_logged_in($data);
-                        redirect('users/view');
-                    } else {
-                        set_flash_alert('danger', config_item('SQLError'));
-                    }
-                }  else {
-                    set_flash_alert('danger', $this->form_validation->errors()); 
-                    redirect('users/add_User');
-                }
-        } else {
-            $this->call->view('users/add_User');
-        }
-        
-    }
 
 
- /*   public function create() {
+
+    public function create() {
         
         $this->call->library('form_validation');
         if($this->form_validation->submitted()){
@@ -83,6 +41,7 @@ class UserController extends Controller {
             $username = $this->io->post('username');
             $email    = $this->io->post('email');
             $password = $this->io->post('password');
+            $password_confirmation = $this->io->post('password_confirmation');
             $role     = $this->io->post('role');
             $created_at = date('Y-m-d H:i:s', time() + 8*3600);
 
@@ -100,7 +59,7 @@ class UserController extends Controller {
 
            
     }
-*/
+
     public function update($id) {
          
         $data['user'] = $this->UserModel->find($id);
