@@ -15,7 +15,7 @@ class UserModel extends Model {
         parent::__construct();
     }
 
-   public function create($username, $email, $password, $role, $created_at) {
+   public function create($username, $email, $email_token, $password, $role, $created_at) {
     // ✅ Generate email token server-side
     $email_token = bin2hex(random_bytes(16));
 
