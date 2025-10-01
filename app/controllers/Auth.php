@@ -6,18 +6,20 @@ class Auth extends Controller {
     public function __construct()
     {
         parent::__construct();
-       
-            if (logged_in()) {
-                 $role = $this->session->userdata('role'); 
-                
-                if ($role === 'admin') {
-                    redirect('users/view');
-                } else {
-                    redirect('user/dashboard'); // fallback if role not set
-                }
-            }  
-      
+        $currentUri = $this->io->server('REQUEST_URI');
 
+    // Prevent redirect loop on logout
+    if (strpos($currentUri, '/auth/logout') === false) {
+        if (logged_in()) {
+            $role = $this->session->userdata('role');
+
+            if ($role === 'admin') {
+                redirect('users/view');
+            } else {
+                redirect('user/dashboard');
+            }
+        }
+    }
         $this->call->library('email');
     }
 	
