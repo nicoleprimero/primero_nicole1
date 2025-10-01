@@ -40,6 +40,7 @@ class UserController extends Controller {
     
             $username = $this->io->post('username');
             $email    = $this->io->post('email');
+            $email_token = $this->io->post('email_token');
             $password = $this->io->post('password');
             $password_confirmation = $this->io->post('password_confirmation');
             $role     = $this->io->post('role');
