@@ -59,7 +59,8 @@ class Auth extends Controller {
                 ->name('email')
                     ->required()
                     ->is_unique('users', 'email', $email, 'Email was already taken.');
-                if($this->form_validation->run()) {
+                if($this->form_validation->run()) { 
+                    $created_at = date('Y-m-d H:i:s');
                     if($this->lauth->register($username, $email, $this->io->post('password'), $email_token, $created_at)) {
                         $data = $this->lauth->login($email, $this->io->post('password'));
                         $this->lauth->set_logged_in($data);
