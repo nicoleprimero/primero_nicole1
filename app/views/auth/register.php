@@ -46,6 +46,14 @@
                     <input id="password_confirmation" type="password" class="form-control" name="password_confirmation" required minlength="8">
                 </div>
 
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select id="role" name="role" required>
+                        <option value="fairy">Fairy</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+
                 <button type="submit" class="submit-btn">✨ Register</button>
             </form>
 

@@ -83,10 +83,11 @@ class Auth extends Controller {
 		$replace = array($token, base_url());
 		$template = str_replace($search, $replace, $template);
 		$this->email->recipient($email);
-		$this->email->subject('Wenesday Reset Password'); //change based on subject
-		$this->email->sender('juvaltabernero@gmail.com'); //change based on sender email
-		$this->email->reply_to('juvaltabernero@gmail.com'); // change based on sender email
+		$this->email->subject('Reset Password'); //change based on subject
+		$this->email->sender('nj.prime@gmail.com'); //change based on sender email
+		$this->email->reply_to('nj.prime04@gmail.com'); // change based on sender email
 		$this->email->email_content($template, 'html');
+        $this->email->recipient($email); 
 		$this->email->send();
 	}
 

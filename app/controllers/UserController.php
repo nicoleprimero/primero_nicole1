@@ -40,6 +40,7 @@ class UserController extends Controller {
             $email    = $this->io->post('email');
             $password = $this->io->post('password');
             $role     = $this->io->post('role');
+            $created_at = date('Y-m-d H:i:s', time() + 8*3600);
 
             $this->UserModel->create($username, $email, $password, $role);
 
@@ -63,7 +64,8 @@ class UserController extends Controller {
             $data = [
                 'username' => $this->io->post('username'),
                 'email' => $this->io->post('email'),
-                'role' => $this->io->post('role')
+                'role' => $this->io->post('role'),
+                'updated_at' => date('Y-m-d H:i:s', time() + 8*3600)
             ];
             $this->UserModel->update($id, $data);
             redirect('users/view');

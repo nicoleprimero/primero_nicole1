@@ -7,7 +7,7 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
  * Automatically generated via CLI.
  */
 class UserModel extends Model {
-    protected $table = 'magicusers';
+    protected $table = 'users';
     protected $primary_key = 'id';
 
     public function __construct()
@@ -15,30 +15,32 @@ class UserModel extends Model {
         parent::__construct();
     }
 
-    public function create($username, $email, $role) {
+    public function create($username, $email, $password, $role, $created_at) {
         $data = array(
             'username' => $username,
             'email' => $email,
-            'role' => $role
+            '$password' => password_hash($password, PASSWORD_BCRYPT),
+            'role' => $role,
+            'created_at' => date('Y-m-d H:i:s', time() + 8*3600)
         );
-        return $this->db->table('magicusers')->insert($data);
+        return $this->db->table('users')->insert($data);
     }   
 
     public function get_one($id){
-       return $this->db->table('magicusers')->where('id', $id)->get();
+       return $this->db->table('users')->where('id', $id)->get();
     }
 
     
 
    public function delete($id) {
-       return $this->db->table('magicusers')->where('id', $id)->delete();
+       return $this->db->table('users')->where('id', $id)->delete();
    }
 
    public function page($q, $records_per_page = null, $page = null) {
             if (is_null($page)) {
-                return $this->db->table('magicusers')->get_all();
+                return $this->db->table('users')->get_all();
             } else {
-                $query = $this->db->table('magicusers');
+                $query = $this->db->table('users');
                 
                 // Build LIKE conditions
                 $query->like('id', '%'.$q.'%')
@@ -59,6 +61,18 @@ class UserModel extends Model {
                 return $data;
             }
         }
+
+         public function get_user_by_id($id)
+    {
+        return $this->db->table($this->table)
+                        ->where('id', $id)
+                        ->get();
+    }
+
+    public function get_all_users()
+    {
+        return $this->db->table($this->table)->get_all();
+    }
 
 
 
