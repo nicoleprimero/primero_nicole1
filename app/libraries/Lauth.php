@@ -70,7 +70,7 @@ class Lauth {
 	 * @param  string $usertype   Usertype
 	 * @return $this
 	 */
-	public function register($username, $email, $password, $email_token, $created_at)
+	public function register($username, $email, $password, $email_token)
 	{
 		$this->LAVA->db->transaction();
 		$data = array(
@@ -78,7 +78,7 @@ class Lauth {
 			'password' => $this->passwordhash($password),
 			'email' => $email,
 			'email_token' => $email_token,
-			'created_at' => date("Y-m-d h:i:s", time() + 8*3600)
+			
 		);
 
 		$res = $this->LAVA->db->table('users')->insert($data);
