@@ -78,7 +78,7 @@ class Lauth {
 			'password' => $this->passwordhash($password),
 			'email' => $email,
 			'email_token' => $email_token,
-			'$role' => '$role',
+			'role' => '$role',
 			'created_at' => date("Y-m-d h:i:s", time() + 8*3600)
 		);
 
