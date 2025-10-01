@@ -8,7 +8,7 @@ class Auth extends Controller {
         parent::__construct();
        if (segment(2) != 'logout') {
             if (logged_in()) {
-                $role = session('role'); // Or however you retrieve the user role
+                 $role = $this->session->userdata('role'); 
                 
                 if ($role === 'admin') {
                     redirect('view_page');
