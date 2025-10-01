@@ -16,15 +16,23 @@ class UserModel extends Model {
     }
 
    public function create($username, $email, $password, $role, $created_at) {
-        $data = array(
-            'username' => $username,
-            'email' => $email,
-            'password' => password_hash($password, PASSWORD_BCRYPT),
-            'role' => $role,
-            'created_at' => date('Y-m-d H:i:s', time() + 8*3600)
-        );
-        return $this->db->table('users')->insert($data);
-    }   
+    // ✅ Generate email token server-side
+    $email_token = bin2hex(random_bytes(16));
+
+    // Prepare data array
+    $data = array(
+        'username'    => $username,
+        'email'       => $email,
+        'email_token' => $email_token, 
+        'password'    => password_hash($password, PASSWORD_BCRYPT),
+        'role'        => $role,
+        'created_at'  =>  date('Y-m-d H:i:s')
+    );
+
+    // Insert user into DB
+    return $this->db->table('users')->insert($data);
+}
+
 
 
    
