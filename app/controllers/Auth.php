@@ -11,9 +11,9 @@ class Auth extends Controller {
                  $role = $this->session->userdata('role'); 
                 
                 if ($role === 'admin') {
-                    redirect('view_page');
+                    redirect('users/view');
                 } else {
-                    redirect('User_view'); // fallback if role not set
+                    redirect('user/dashboard'); // fallback if role not set
                 }
             }  
       }
