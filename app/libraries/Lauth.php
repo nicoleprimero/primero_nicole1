@@ -98,7 +98,7 @@ class Lauth {
 	 * @param  string $password Password
 	 * @return string Validated Username
 	 */
-	public function login($email, $password)
+/*	public function login($email, $password)
 	{				
     	$row = $this->LAVA->db
     					->table('users') 					
@@ -112,6 +112,21 @@ class Lauth {
 			}
 		}
 	}
+*/
+
+     public function login($email, $password)
+{				
+    $row = $this->LAVA->db
+        ->table('users') 					
+        ->where('email', $email)
+        ->get();
+
+    if($row && password_verify($password, $row['password'])) {
+        return $row;  // ✅ return whole user row, including role
+    }
+
+    return false;
+}
 
 	/**
 	 * Change Password
@@ -133,7 +148,7 @@ class Lauth {
 	 * Set up session for login
 	 * @param $this
 	 */
-	public function set_logged_in($user_id) {
+/*	public function set_logged_in($user_id) {
 		$session_data = hash('sha256', md5(time().$this->get_user_id()));
 		$data = array(
 			'user_id' => $user_id,
@@ -145,6 +160,35 @@ class Lauth {
 				->insert($data);
 		if($res) $this->LAVA->session->set_userdata(array('session_data' => $session_data, 'user_id' => $user_id, 'logged_in' => 1));
 	}
+*/
+
+     public function set_logged_in($user)
+{
+    $session_data = hash('sha256', md5(time().$user['id']));
+
+    // Save to sessions table
+    $data = array(
+        'user_id' => $user['id'],
+        'browser' => $_SERVER['HTTP_USER_AGENT'],
+        'ip' => $_SERVER['REMOTE_ADDR'],
+        'session_data' => $session_data
+    );
+    $this->LAVA->db->table('sessions')->insert($data);
+
+    // Save to PHP session
+    $this->LAVA->session->set_userdata(array(
+        'session_data' => $session_data,
+        'user_id'      => $user['id'],
+        'username'     => $user['username'],
+        'email'        => $user['email'],
+        'role'         => $user['role'],   // ✅ role stored
+        'logged_in'    => 1
+    ));
+}
+
+
+
+
 
 	/**
 	 * Check if user is Logged in

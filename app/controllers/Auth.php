@@ -9,16 +9,19 @@ class Auth extends Controller {
         $currentUri = $this->io->server('REQUEST_URI');
 
     // Prevent redirect loop on logout
-    if (strpos($currentUri, '/auth/logout') === false) {
-        if (logged_in()) {
+            if (strpos($currentUri, '/auth/logout') === false) {
+                if (logged_in()) {
             $role = $this->session->userdata('role');
 
             if ($role === 'admin') {
                 redirect('users/view');
-            } else {
+            } elseif ($role === 'fairy') {
                 redirect('user/dashboard');
+            } else {
+                redirect('auth/login'); // fallback if role not found
             }
         }
+
     }
         $this->call->library('email');
     }
@@ -27,7 +30,39 @@ class Auth extends Controller {
         $this->call->view('auth/login');
     }  
 
+
     public function login() {
+    if($this->form_validation->submitted()) {
+        $email = $this->io->post('email');
+        $password = $this->io->post('password');
+
+        // Try logging in
+        $user = $this->lauth->login($email, $password);
+
+        if(empty($user)) {
+            // Invalid login
+            $this->session->set_flashdata(['is_invalid' => 'is-invalid']);
+            $this->session->set_flashdata(['err_message' => 'These credentials do not match our records.']);
+            redirect('auth/login');
+        } else {
+            // Save session
+            $this->lauth->set_logged_in($user);
+
+            // Redirect based on role
+            if ($user['role'] === 'admin') {
+                redirect('users/view');
+            } else {
+                redirect('user/dashboard');
+            }
+        }
+    } else {
+        // Show login form
+        $this->call->view('auth/login');
+    }
+}
+
+
+/*    public function login() {
         if($this->form_validation->submitted()) {
             $email = $this->io->post('email');
 			$password = $this->io->post('password');
@@ -45,7 +80,7 @@ class Auth extends Controller {
         
     }
 
-    
+*/    
 
     public function register() {
 
