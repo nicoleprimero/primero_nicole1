@@ -48,7 +48,7 @@
 
                 <div class="form-group">
                     <label for="role">Role</label>
-                    <select id="role" name="role" required>
+                    <select id="role" name="role" type="role" class="form-control" required>
                         <option value="fairy">Fairy</option>
                         <option value="admin">Admin</option>
                     </select>
