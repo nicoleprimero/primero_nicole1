@@ -6,7 +6,7 @@ class Auth extends Controller {
     public function __construct()
     {
         parent::__construct();
-       if (segment(2) != 'logout') {
+       
             if (logged_in()) {
                  $role = $this->session->userdata('role'); 
                 
@@ -16,7 +16,7 @@ class Auth extends Controller {
                     redirect('user/dashboard'); // fallback if role not set
                 }
             }  
-      }
+      
 
         $this->call->library('email');
     }
