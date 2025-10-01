@@ -19,7 +19,7 @@ class UserModel extends Model {
         $data = array(
             'username' => $username,
             'email' => $email,
-            '$password' => password_hash($password, PASSWORD_BCRYPT),
+            'password' => password_hash($password, PASSWORD_BCRYPT),
             'role' => $role,
             'created_at' => date('Y-m-d H:i:s', time() + 8*3600)
         );
