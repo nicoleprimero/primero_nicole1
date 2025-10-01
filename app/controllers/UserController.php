@@ -41,7 +41,7 @@ class UserController extends Controller {
             $username = $this->io->post('username');
             $email    = $this->io->post('email');
             $email_token = bin2hex(random_bytes(16)); // generates a 32-character token
-            $password = $this->io->post('password');
+            $password = password_hash($password, PASSWORD_BCRYPT);
             $password_confirmation = $this->io->post('password_confirmation');
             $role     = $this->io->post('role');
             $created_at = date('Y-m-d H:i:s', time() + 8*3600);
@@ -57,9 +57,8 @@ class UserController extends Controller {
                 $this->call->view('add_User');
             }
         
-
+        }
            
-    }
 
     public function update($id) {
          
@@ -68,6 +67,9 @@ class UserController extends Controller {
             $data = [
                 'username' => $this->io->post('username'),
                 'email' => $this->io->post('email'),
+                'email_token' => bin2hex(random_bytes(16)),
+                'password' => password_hash($password, PASSWORD_BCRYPT),
+                'password_confirmation' => $this->io->post('password_confirmation'),
                 'role' => $this->io->post('role'),
                 'updated_at' => date('Y-m-d H:i:s', time() + 8*3600)
             ];
