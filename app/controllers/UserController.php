@@ -65,10 +65,10 @@ class UserController extends Controller {
                     }
                 }  else {
                     set_flash_alert('danger', $this->form_validation->errors()); 
-                    redirect('auth/register');
+                    redirect('users/add_User');
                 }
         } else {
-            $this->call->view('auth/register');
+            $this->call->view('users/add_User');
         }
         
     }
