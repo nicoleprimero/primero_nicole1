@@ -3,22 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Password</title>
+    <title>🔒 Reset Password</title>
     <link rel="stylesheet" href="<?=base_url();?>/public/css/style.css">
-
-      <style>
-        .invalid-feedback {
-            color: #dc3545;
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
-        .valid-feedback {
-            color: #28a745;
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
-      
-    
+    <style>
+        .invalid-feedback { color: #dc3545; font-size: 0.9em; margin-top: 5px; }
+        .valid-feedback { color: #28a745; font-size: 0.9em; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -36,7 +25,10 @@
                 <!-- Email -->
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input id="email" type="email" name="email" placeholder="Enter your email" required>
+                    <input id="email" type="email" class="form-control 
+                           <?= $session->flashdata('alert') === 'is-invalid' ? 'is-invalid' : 
+                              ($session->flashdata('alert') === 'is-valid' ? 'is-valid' : ''); ?>" 
+                           name="email" placeholder="Enter your email" required>
                     
                    <?php if($session->flashdata('alert') == 'is-invalid'): ?>
                         <span class="invalid-feedback" role="alert">
@@ -57,8 +49,6 @@
             <p style="margin-top: 15px;">
                 Remembered your password? <a href="<?=site_url('auth/login');?>">✨ Login here</a>
             </p>
-
-            
         </div>
     </div>
 </body>

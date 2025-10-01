@@ -4,16 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Password</title>
+    <link rel="icon" type="image/png" href="<?=base_url();?>public/img/favicon.ico"/>
     <link rel="stylesheet" href="<?=base_url();?>/public/css/style.css">
+
+    <!-- Gothic Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nosifer&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <?php include APP_DIR.'views/templates/nav_auth.php'; ?>
+
     <!-- Main Content -->
     <div class="main-content">
         <div class="center-box">
             <h1>🔑 Set New Password</h1>
 
-            <!-- Note -->
-            <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
+            <!-- Password rules -->
+            <p class="password-note">
                 Password must be at least <b>8 characters</b> and contain one special character (!@£$%^&*-_+=?), 
                 a number, uppercase and lowercase letters.
             </p>
@@ -53,9 +61,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" 
-            integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" 
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
     <script>
         $(function() {

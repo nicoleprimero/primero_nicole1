@@ -61,6 +61,29 @@ class UserModel extends Model {
         }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
         /*
     public function count_all_records()
     {

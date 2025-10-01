@@ -371,17 +371,14 @@ button,
 [type=button],
 [type=reset],
 [type=submit] {
-  -webkit-appearance: button; /* Safari/old browsers */
-  appearance: button;         /* Standard property */
+  -webkit-appearance: button;
 }
-
 button:not(:disabled),
 [type=button]:not(:disabled),
 [type=reset]:not(:disabled),
 [type=submit]:not(:disabled) {
   cursor: pointer;
 }
-
 
 ::-moz-focus-inner {
   padding: 0;
@@ -432,10 +429,8 @@ legend + * {
 
 [type=search] {
   outline-offset: -2px;
-  -webkit-appearance: textfield; /* Safari/old browsers */
-  appearance: textfield;         /* Standard property */
+  -webkit-appearance: textfield;
 }
-
 
 /* rtl:raw:
 [type="tel"],
@@ -2260,15 +2255,12 @@ textarea.form-control-lg {
   background-position: center;
   background-size: contain;
   border: 1px solid rgba(0, 0, 0, 0.25);
-
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-
-  -webkit-print-color-adjust: exact; /* Safari / old WebKit */
-          print-color-adjust: exact; /* Standard */
+  -webkit-print-color-adjust: exact;
+          color-adjust: exact;
 }
-
 .form-check-input[type=checkbox] {
   border-radius: 0.25em;
 }
