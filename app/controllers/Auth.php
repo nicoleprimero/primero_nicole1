@@ -6,11 +6,18 @@ class Auth extends Controller {
     public function __construct()
     {
         parent::__construct();
-        if(segment(2) != 'logout') {
-            if(logged_in()) {
-                redirect('get_all');
-            }
-        }
+       if (segment(2) != 'logout') {
+            if (logged_in()) {
+                $role = session('role'); // Or however you retrieve the user role
+                
+                if ($role === 'admin') {
+                    redirect('view_page');
+                } else {
+                    redirect('User_view'); // fallback if role not set
+                }
+            }  
+      }
+
         $this->call->library('email');
     }
 	
