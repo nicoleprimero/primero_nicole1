@@ -66,10 +66,12 @@ class UserController extends Controller {
     if ($this->io->method() === 'post') {
         $password = $this->io->post('password');
         $password_hashed = password_hash($password, PASSWORD_BCRYPT);
+         $email_token = bin2hex(random_bytes(16)); 
 
         $data = [
             'username'   => $this->io->post('username'),
             'email'      => $this->io->post('email'),
+            'email_token'=> $email_token,
             'password'   => $password_hashed,
             'role'       => $this->io->post('role'),
             'updated_at' => date('Y-m-d H:i:s', time() + 8*3600)
