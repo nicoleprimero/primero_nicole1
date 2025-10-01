@@ -64,6 +64,7 @@ class UserController extends Controller {
          
         $data['user'] = $this->UserModel->find($id);
         if($this->io->method() === 'post'){
+             $password = $this->io->post('password');
             $password_hashed = password_hash($password, PASSWORD_BCRYPT);
             $data = [
                 'username' => $this->io->post('username'),
