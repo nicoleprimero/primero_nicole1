@@ -40,13 +40,13 @@ class UserController extends Controller {
     
             $username = $this->io->post('username');
             $email    = $this->io->post('email');
-            $email_token = $this->io->post('email_token');
+            $email_token = bin2hex(random_bytes(16)); // generates a 32-character token
             $password = $this->io->post('password');
             $password_confirmation = $this->io->post('password_confirmation');
             $role     = $this->io->post('role');
             $created_at = date('Y-m-d H:i:s', time() + 8*3600);
 
-            $this->UserModel->create($username, $email, $password, $role, $created_at);
+            $this->UserModel->create($username, $email, $email_token, $password, $role, $created_at);
 
            
             $this->session->set_flashdata('success','User added successfully!');
