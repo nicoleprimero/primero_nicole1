@@ -43,57 +43,9 @@ class Auth extends Controller {
         
     }
 
-    public function register() {if ($this->form_validation->submitted()) {
-    $username = $this->io->post('username');
-    $email = $this->io->post('email');
-    $email_token = bin2hex(random_bytes(50));
+    
 
-    $this->form_validation
-        ->name('username')
-            ->required()
-            ->is_unique('users', 'username', $username, 'Username was already taken.')
-            ->min_length(5, 'Username must not be less than 5 characters.')
-            ->max_length(20, 'Username must not be more than 20 characters.')
-            ->alpha_numeric_dash('Special characters are not allowed in username.')
-        ->name('password')
-            ->required()
-        ->name('password_confirmation')
-            ->required()
-            ->matches('password', 'Passwords did not match.')
-        ->name('email')
-            ->required()
-            ->is_unique('users', 'email', $email, 'Email was already taken.');
-
-    if ($this->form_validation->run()) {
-        $created_at = date('Y-m-d H:i:s');
-        $role = isset($_POST['role']) ? $_POST['role'] : 'fairy';
-
-        $new_user_id = $this->lauth->register($username, $email, $this->io->post('password'), $email_token, $role, $created_at);
-
-        if ($new_user_id) {
-            // ✅ fetch the user we just inserted
-            $user = $this->LAVA->db->table('users')->where('id', $new_user_id)->get()->row_array();
-
-            if ($user) {
-                $this->lauth->set_logged_in($user);
-                redirect('auth/login');
-            } else {
-                set_flash_alert('danger', 'Registration successful, but login failed. Please try logging in.');
-                redirect('auth/login');
-            }
-        } else {
-            set_flash_alert('danger', config_item('SQLError'));
-        }
-    } else {
-        set_flash_alert('danger', $this->form_validation->errors());
-        redirect('auth/register');
-    }
-} else {
-    $this->call->view('auth/register');
-}
-    }
-
-    /*public function register() {
+    public function register() {
 
         if($this->form_validation->submitted()) {
             $username = $this->io->post('username');
@@ -135,7 +87,7 @@ class Auth extends Controller {
             $this->call->view('auth/register');
         }
         
-    }*/
+    }
 
     private function send_password_token_to_email($email, $token) {
 		$template = file_get_contents(ROOT_DIR.PUBLIC_DIR.'/templates/reset_password_email.html');
