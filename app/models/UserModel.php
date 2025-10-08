@@ -15,7 +15,7 @@ class UserModel extends Model {
         parent::__construct();
     }
 
-   public function create($username, $email, $email_token, $password, $role, $created_at) {
+   /*public function create($username, $email, $email_token, $password, $role, $created_at) {
     // ✅ Generate email token server-side
     $email_token = bin2hex(random_bytes(16));
 
@@ -27,6 +27,22 @@ class UserModel extends Model {
         'password'    => password_hash($password, PASSWORD_BCRYPT),
         'role'        => $role,
         'created_at'  =>  date('Y-m-d H:i:s')
+    );
+
+    // Insert user into DB
+    return $this->db->table('users')->insert($data);
+}
+*/
+
+    public function create($username, $email, $email_token, $password, $role, $created_at) {
+    // Prepare data array (no re-hashing, no re-token)
+    $data = array(
+        'username'    => $username,
+        'email'       => $email,
+        'email_token' => $email_token, 
+        'password'    => $password, // already hashed in controller
+        'role'        => $role,
+        'created_at'  => $created_at
     );
 
     // Insert user into DB

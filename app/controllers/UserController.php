@@ -32,7 +32,7 @@ class UserController extends Controller {
 
 
 
-    public function create() {
+   /* public function create() {
         
         $this->call->library('form_validation');
         if($this->form_validation->submitted()){
@@ -58,7 +58,45 @@ class UserController extends Controller {
             }
         
         }
-           
+ */          
+
+        public function create() {
+    $this->call->library('form_validation');
+
+    if ($this->form_validation->submitted()) {
+
+        // Get POST data first
+        $username = $this->io->post('username');
+        $email = $this->io->post('email');
+        $password_plain = $this->io->post('password');
+        $password_confirmation = $this->io->post('password_confirmation');
+        $role = $this->io->post('role');
+        $email_token = bin2hex(random_bytes(16)); // 32-character email token
+        $created_at = date('Y-m-d H:i:s', time() + 8 * 3600);
+
+        // Validate password match
+        if ($password_plain !== $password_confirmation) {
+            $this->session->set_flashdata('error', 'Passwords do not match!');
+            redirect('users/add_User');
+            return;
+        }
+
+        // Hash password after validation
+        $password = password_hash($password_plain, PASSWORD_BCRYPT);
+
+        // Save to database via model
+        $this->UserModel->create($username, $email, $email_token, $password, $role, $created_at);
+
+        // Flash message and redirect
+        $this->session->set_flashdata('success', 'User added successfully!');
+        redirect('users/view');
+    } 
+    else {
+        // Show form if not submitted
+        $this->call->view('add_User');
+    }
+}
+
 
     public function update($id) {
     $data['user'] = $this->UserModel->find($id);
